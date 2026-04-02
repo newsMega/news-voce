@@ -123,7 +123,7 @@ function generateBannerBlock(banner) {
 
     let html = htmlTemplate;
 
-    // Banner
+    // Banner topo
     html = html.replace('{banner-block}', generateBannerBlock(data.banner));
 
     // LOOP TEMAS
