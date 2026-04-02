@@ -1,0 +1,19 @@
+{
+  "fndAmarelo": {
+    "bgColor": "#ffe762",
+    "titColor": "#3C83F5",
+    "txtColor": "#2E3345"
+  },
+
+  "fndAzul": {
+    "bgColor": "#0084f9",
+    "titColor": "#ffe762",
+    "txtColor": "#fff"
+  },
+
+  "fndCinza": {
+    "bgColor": "#f2f2f2",
+    "titColor": "#3C83F5",
+    "txtColor": "#2E3345"
+  }
+}

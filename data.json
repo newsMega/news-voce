@@ -1,0 +1,92 @@
+{
+    "vigencia": "0204",
+    "versao": 1,
+    "banner": {
+        "img": "https://oliviadev.online/megafone/header-guide.jpg",
+        "tit": "Título banner",
+        "link": "false"
+    },
+
+    "fiqueLigado": {
+        "aba": "fiqueLigadoAmarelo",
+        "color": "fndAmarelo",
+        "items": [
+            {
+                "img": "https://oliviadev.online/megafone/logo-110x100.png",
+                "tit": "Título Lorem ipsum dolor sit amet",
+                "txt": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas.",
+                "cta": "saibaMaisAzul",
+                "img_link": true,
+                "link": "https://..."
+            },{
+                "img": "https://oliviadev.online/megafone/logo-110x100.png",
+                "tit": "Título Lorem ipsum dolor sit amet",
+                "txt": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas.",
+                "cta": "false",
+                "img_link": false,
+                "link": ""
+            }
+        ]
+    },
+
+    "cuidarVoce": {
+        "aba": "cuidarVcAmareloAzul",
+        "color": "fndAzul",
+        "items": [
+            {
+                "img": "https://oliviadev.online/megafone/logo-110x100.png",
+                "tit": "Título Lorem ipsum dolor sit amet",
+                "txt": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas.",
+                "cta": "false",
+                "img_link": false,
+                "link": ""
+            }
+        ]
+    },
+
+    "movimentoCuidado": {
+        "aba": "movimentoCuidadoAzulCinza",
+        "color": "fndCinza",
+        "items": []
+    },
+
+    "nossoCrescimento": {
+        "aba": "nossoCrescimentoCinzaAmarelo",
+        "color": "fndAmarelo",
+        "items": [
+            {
+                "img": "https://oliviadev.online/megafone/logo-110x100.png",
+                "tit": "Título Lorem ipsum dolor sit amet",
+                "txt": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas.",
+                "cta": "false",
+                "img_link": false,
+                "link": ""
+            },{
+                "img": "https://oliviadev.online/megafone/logo-110x100.png",
+                "tit": "Título Lorem ipsum dolor sit amet",
+                "txt": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas.",
+                "cta": "saibaMaisAzul",
+                "img_link": false,
+                "link": "https://..."
+            }
+        ]
+            
+    },
+
+    "pessoasProcessos": {
+        "aba": "pessoasProcessosAmareloAzul",
+        "color": "fndCinza",
+        "items": [
+            {
+                "img": "https://oliviadev.online/megafone/logo-110x100.png",
+                "tit": "Título Lorem ipsum dolor sit amet",
+                "txt": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas.",
+                "cta": "false",
+                "img_link": false,
+                "link": "#"
+            }
+        ]
+    }
+
+
+}

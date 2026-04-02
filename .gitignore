@@ -1,0 +1,21 @@
+# Versão legível do build.js (mantida localmente)
+build-open.js
+
+# Arquivos de saída HTML (se você não quiser versioná-los)
+*.html
+
+# Dependências (se houver)
+interface/
+node_modules/
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de editor
+.vscode/
+.idea/
+
+# Logs e arquivos temporários
+*.log
+*.tmp
