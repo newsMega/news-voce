@@ -1,8 +1,8 @@
 {
     "vigencia": "0204",
-    "versao": 7,
+    "versao": 8,
     "banner": {
-        "img": "https://oliviadev.online/megafone/header-guide.jpg",
+        "img": "https://oliviadev.online/megafone/newsletters/dpsp/assets-fixeds/header-guide.jpg",
         "tit": "Título banner",
         "link": "false"
     },
@@ -12,14 +12,14 @@
         "color": "fndAmarelo",
         "items": [
             {
-                "img": "https://oliviadev.online/megafone/logo-110x100.png",
+                "img": "https://oliviadev.online/megafone/newsletters/dpsp/assets-fixeds/logo-110x100.png",
                 "tit": "Título Lorem ipsum dolor sit amet",
                 "txt": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas.",
                 "cta": "saibaMaisAzul",
                 "img_link": true,
                 "link": "https://..."
             },{
-                "img": "https://oliviadev.online/megafone/logo-110x100.png",
+                "img": "https://oliviadev.online/megafone/newsletters/dpsp/assets-fixeds/logo-110x100.png",
                 "tit": "Título Lorem ipsum dolor sit amet",
                 "txt": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas.",
                 "cta": "false",
@@ -34,7 +34,7 @@
         "color": "fndAzul",
         "items": [
             {
-                "img": "https://oliviadev.online/megafone/logo-110x100.png",
+                "img": "https://oliviadev.online/megafone/newsletters/dpsp/assets-fixeds/logo-110x100.png",
                 "tit": "Título Lorem ipsum dolor sit amet",
                 "txt": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas.",
                 "cta": "false",
@@ -55,14 +55,14 @@
         "color": "fndAmarelo",
         "items": [
             {
-                "img": "https://oliviadev.online/megafone/logo-110x100.png",
+                "img": "https://oliviadev.online/megafone/newsletters/dpsp/assets-fixeds/logo-110x100.png",
                 "tit": "Título Lorem ipsum dolor sit amet",
                 "txt": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas.",
                 "cta": "false",
                 "img_link": false,
                 "link": ""
             },{
-                "img": "https://oliviadev.online/megafone/logo-110x100.png",
+                "img": "https://oliviadev.online/megafone/newsletters/dpsp/assets-fixeds/logo-110x100.png",
                 "tit": "Título Lorem ipsum dolor sit amet",
                 "txt": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas.",
                 "cta": "saibaMaisAzul",
@@ -78,7 +78,7 @@
         "color": "fndCinza",
         "items": [
             {
-                "img": "https://oliviadev.online/megafone/logo-110x100.png",
+                "img": "https://oliviadev.online/megafone/newsletters/dpsp/assets-fixeds/logo-110x100.png",
                 "tit": "Título Lorem ipsum dolor sit amet",
                 "txt": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas.",
                 "cta": "false",
