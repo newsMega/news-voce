@@ -1,12 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
-// URL base dos arquivos fixos no GitHub (RAW)
-// Ajuste para o seu usuário/repositório
-const BASE_URL = 'https://raw.githubusercontent.com/maroAlmeida/news-vc/main/assets/';
+// 🔥 IMPORTANTE: fetch compatível com Node
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+
+// URL base dos arquivos fixos (AJUSTE se necessário)
+const BASE_URL = 'https://raw.githubusercontent.com/newsMega/news-voce/main/assets/';
 
 // =========================
-// 🔹 FUNÇÕES DE FETCH
+// 🔹 FETCH
 // =========================
 async function fetchJSON(url) {
   const response = await fetch(url);
@@ -21,32 +23,33 @@ async function fetchText(url) {
 }
 
 // =========================
-// 🔹 FUNÇÕES AUXILIARES (geração do HTML)
+// 🔹 HTML HELPERS
 // =========================
 function generateImageCell(item, link) {
-  const imgTag = `<img width="110" height="110" alt="{item-tit}" title="{item-tit}"
-    src="{item-img}" 
+  const imgTag = `<img width="110" height="110" alt="${item.tit || ''}" title="${item.tit || ''}"
+    src="${item.img || ''}" 
     style="width:110px;height:110px;max-height:110px;max-width:110px;display:block;margin:auto;object-fit:cover;border:0;outline:none;text-decoration:none;"
   />`;
 
   let inner = imgTag;
-  if (item.img_link === true && link !== undefined && link !== null && link !== 'false') {
-    inner = `<a href="${link}" style="mso-line-height-rule:exactly;text-decoration:none;display:block">${imgTag}</a>`;
+  if (item.img_link === true && link && link !== 'false') {
+    inner = `<a href="${link}" style="text-decoration:none;display:block">${imgTag}</a>`;
   }
 
-  return `<td height="110px" valign="top" width="110px" align="left" style="padding:0;Margin:0">\n  ${inner}\n<\/td>`;
+  return `<td height="110px" valign="top" width="110px" align="left" style="padding:0;Margin:0">
+  ${inner}
+</td>`;
 }
 
 function renderItens(template, itens, colorConfig, ctas) {
   return itens.map(item => {
     let bloco = template;
 
-    // Substitui célula da imagem
-    const imageCellRegex = /<td height="110px" valign="top" width="110px" align="left" style="padding:0;Margin:0">\s*<img[^>]*\/>\s*<\/td>/;
+    const imageCellRegex = /<td[^>]*>\s*<img[^>]*\/>\s*<\/td>/;
     const match = bloco.match(imageCellRegex);
+
     if (match) {
-      const newImageCell = generateImageCell(item, item.link);
-      bloco = bloco.replace(match[0], newImageCell);
+      bloco = bloco.replace(match[0], generateImageCell(item, item.link));
     }
 
     bloco = bloco.replace(/{item-img}/g, item.img || '');
@@ -54,7 +57,7 @@ function renderItens(template, itens, colorConfig, ctas) {
     bloco = bloco.replace(/{item-txt}/g, item.txt || '');
 
     const ctaKey = (item.cta && item.cta !== 'false') ? item.cta : null;
-    const hasValidCta = ctaKey && ctas[ctaKey] && ctas[ctaKey] !== '';
+    const hasValidCta = ctaKey && ctas[ctaKey];
 
     if (hasValidCta) {
       bloco = bloco.replace(/{item-link}/g, item.link || '#');
@@ -72,39 +75,39 @@ function renderItens(template, itens, colorConfig, ctas) {
 
 function generateBannerBlock(banner) {
   if (!banner) return '';
-  const { img, tit, link } = banner;
-  const hasLink = (link && link !== 'false');
-  const imgTag = `<img src="${img}" title="${tit}" alt="${tit}" width="100%" style="display:block;font-size:14px;border:0;outline:none;text-decoration:none;margin:0;height:auto;width:100%;max-width:600px;" />`;
 
-  if (hasLink) {
-    return `<td bgcolor="#fff" align="center" style="padding:0;Margin:0;margin:0;background-color:#fff;width:100%;max-width:600px;overflow:hidden"><a href="${link}" style="mso-line-height-rule:exactly;text-decoration:none;display:block;">${imgTag}</a></td>`;
-  } else {
-    return `<td bgcolor="#fff" align="center" style="padding:0;Margin:0;margin:0;background-color:#fff;width:100%;max-width:600px;overflow:hidden">${imgTag}</td>`;
+  const { img, tit, link } = banner;
+  const imgTag = `<img src="${img}" alt="${tit}" width="100%" style="display:block;border:0;width:100%;max-width:600px;" />`;
+
+  if (link && link !== 'false') {
+    return `<td align="center"><a href="${link}">${imgTag}</a></td>`;
   }
+
+  return `<td align="center">${imgTag}</td>`;
 }
 
 // =========================
-// 🔹 FLUXO PRINCIPAL (async)
+// 🔹 MAIN
 // =========================
 (async () => {
   try {
-    // 1. Obter caminho do data.json via argumento (ou padrão ./data.json)
     const dataFilePath = process.argv[2] || './data.json';
+
     if (!fs.existsSync(dataFilePath)) {
       throw new Error(`Arquivo ${dataFilePath} não encontrado.`);
     }
+
     const data = JSON.parse(fs.readFileSync(dataFilePath, 'utf-8'));
 
-    // Verifica se os campos obrigatórios existem
     if (!data.vigencia) {
-      throw new Error('Campo "vigencia" não encontrado no data.json');
+      throw new Error('Campo "vigencia" obrigatório');
     }
+
     if (data.versao === undefined) {
-      console.warn('⚠️ Campo "versao" não encontrado no data.json, usando padrão 1');
       data.versao = 1;
     }
 
-    // 2. Buscar arquivos fixos hospedados no GitHub
+    // 🔥 fetch paralelo
     const [colors, ctas, editorias, htmlTemplate] = await Promise.all([
       fetchJSON(`${BASE_URL}colors.json`),
       fetchJSON(`${BASE_URL}ctas.json`),
@@ -114,51 +117,50 @@ function generateBannerBlock(banner) {
 
     let html = htmlTemplate;
 
-    // 3. Banner
-    const bannerBlock = generateBannerBlock(data.banner);
-    html = html.replace('{banner-block}', bannerBlock);
+    // Banner
+    html = html.replace('{banner-block}', generateBannerBlock(data.banner));
 
-    // 4. Loop dos temas
+    // Temas
     const temaRegex = /<!-- LOOP:temas:start -->([\s\S]*?)<!-- LOOP:temas:end -->/;
-    const temaMatch = html.match(temaRegex);
-    if (!temaMatch) throw new Error('❌ LOOP:temas não encontrado no HTML');
-    const temaTemplate = temaMatch[1];
+    const temaTemplate = html.match(temaRegex)?.[1];
 
-    const temasRenderizados = Object.entries(data)
-      .filter(([key, tema]) => tema && tema.items && !['banner', 'vigencia', 'versao'].includes(key))
+    if (!temaTemplate) {
+      throw new Error('LOOP de temas não encontrado');
+    }
+
+    const temasHtml = Object.entries(data)
+      .filter(([key, tema]) => tema?.items && !['banner', 'vigencia', 'versao'].includes(key))
       .map(([temaKey, tema]) => {
-        let blocoTema = temaTemplate;
+        let bloco = temaTemplate;
 
-        const colorConfig = colors[tema.color] || { bgColor: '#ffffff', titColor: '#000000', txtColor: '#000000' };
-        const abaImg = editorias[tema.aba] || '';
+        const color = colors[tema.color] || {};
+        const aba = editorias[tema.aba] || '';
 
-        blocoTema = blocoTema.replace(/{tema-nome}/g, temaKey);
-        blocoTema = blocoTema.replace(/{tema-aba}/g, abaImg);
-        blocoTema = blocoTema.replace(/{tema-bg}/g, colorConfig.bgColor);
+        bloco = bloco.replace(/{tema-nome}/g, temaKey);
+        bloco = bloco.replace(/{tema-aba}/g, aba);
+        bloco = bloco.replace(/{tema-bg}/g, color.bgColor || '#fff');
 
         const itensRegex = /<!-- LOOP:itens:start -->([\s\S]*?)<!-- LOOP:itens:end -->/;
-        const itensMatch = blocoTema.match(itensRegex);
-        if (!itensMatch) return blocoTema;
+        const itemTemplate = bloco.match(itensRegex)?.[1];
 
-        const itemTemplate = itensMatch[1];
-        const itensHtml = renderItens(itemTemplate, tema.items || [], colorConfig, ctas);
-        blocoTema = blocoTema.replace(itensRegex, itensHtml);
+        if (!itemTemplate) return bloco;
 
-        return blocoTema;
+        const itensHtml = renderItens(itemTemplate, tema.items, color, ctas);
+
+        return bloco.replace(itensRegex, itensHtml);
       }).join('');
 
-    html = html.replace(temaRegex, temasRenderizados);
+    html = html.replace(temaRegex, temasHtml);
 
-    // 5. Salvar HTML com vigência e versão
-    const outputFileName = `DPSP-NewsPraVoce-${data.vigencia}_v${data.versao}.html`;
-    const outputDir = path.dirname(dataFilePath);
-    const outputFile = path.join(outputDir, outputFileName);
-    fs.writeFileSync(outputFile, html);
+    // Nome do arquivo (MANTIDO como você pediu)
+    const fileName = `DPSP-NewsPraVoce-${data.vigencia}_v${data.versao}.html`;
 
-    console.log(`✅ Build concluído! Arquivo gerado: ${outputFile}`);
+    fs.writeFileSync(fileName, html);
 
-  } catch (error) {
-    console.error('❌ Erro no build:', error.message);
+    console.log(`✅ HTML gerado: ${fileName}`);
+
+  } catch (err) {
+    console.error('❌ ERRO NO BUILD:', err);
     process.exit(1);
   }
 })();
