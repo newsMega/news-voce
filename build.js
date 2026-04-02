@@ -1,10 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 
-// 🔥 IMPORTANTE: fetch compatível com Node
-const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+// ✅ fetch nativo (Node 20)
+const fetch = global.fetch;
 
-// URL base dos arquivos fixos (AJUSTE se necessário)
+// URL base dos arquivos fixos
 const BASE_URL = 'https://raw.githubusercontent.com/newsMega/news-voce/main/assets/';
 
 // =========================
@@ -32,19 +32,21 @@ function generateImageCell(item, link) {
   />`;
 
   let inner = imgTag;
+
   if (item.img_link === true && link && link !== 'false') {
     inner = `<a href="${link}" style="text-decoration:none;display:block">${imgTag}</a>`;
   }
 
   return `<td height="110px" valign="top" width="110px" align="left" style="padding:0;Margin:0">
-  ${inner}
-</td>`;
+    ${inner}
+  </td>`;
 }
 
 function renderItens(template, itens, colorConfig, ctas) {
   return itens.map(item => {
     let bloco = template;
 
+    // substitui imagem completa (TD + IMG)
     const imageCellRegex = /<td[^>]*>\s*<img[^>]*\/>\s*<\/td>/;
     const match = bloco.match(imageCellRegex);
 
@@ -52,10 +54,12 @@ function renderItens(template, itens, colorConfig, ctas) {
       bloco = bloco.replace(match[0], generateImageCell(item, item.link));
     }
 
+    // substituições simples
     bloco = bloco.replace(/{item-img}/g, item.img || '');
     bloco = bloco.replace(/{item-tit}/g, item.tit || '');
     bloco = bloco.replace(/{item-txt}/g, item.txt || '');
 
+    // CTA
     const ctaKey = (item.cta && item.cta !== 'false') ? item.cta : null;
     const hasValidCta = ctaKey && ctas[ctaKey];
 
@@ -66,8 +70,9 @@ function renderItens(template, itens, colorConfig, ctas) {
       bloco = bloco.replace(/<!-- CTA:start -->([\s\S]*?)<!-- CTA:end -->/g, '');
     }
 
-    bloco = bloco.replace(/{tema-tit-color}/g, colorConfig.titColor);
-    bloco = bloco.replace(/{tema-txt-color}/g, colorConfig.txtColor);
+    // cores
+    bloco = bloco.replace(/{tema-tit-color}/g, colorConfig.titColor || '#000');
+    bloco = bloco.replace(/{tema-txt-color}/g, colorConfig.txtColor || '#000');
 
     return bloco;
   }).join('');
@@ -77,6 +82,7 @@ function generateBannerBlock(banner) {
   if (!banner) return '';
 
   const { img, tit, link } = banner;
+
   const imgTag = `<img src="${img}" alt="${tit}" width="100%" style="display:block;border:0;width:100%;max-width:600px;" />`;
 
   if (link && link !== 'false') {
@@ -120,7 +126,7 @@ function generateBannerBlock(banner) {
     // Banner
     html = html.replace('{banner-block}', generateBannerBlock(data.banner));
 
-    // Temas
+    // LOOP TEMAS
     const temaRegex = /<!-- LOOP:temas:start -->([\s\S]*?)<!-- LOOP:temas:end -->/;
     const temaTemplate = html.match(temaRegex)?.[1];
 
@@ -129,7 +135,10 @@ function generateBannerBlock(banner) {
     }
 
     const temasHtml = Object.entries(data)
-      .filter(([key, tema]) => tema?.items && !['banner', 'vigencia', 'versao'].includes(key))
+      .filter(([key, tema]) =>
+        tema?.items &&
+        !['banner', 'vigencia', 'versao'].includes(key)
+      )
       .map(([temaKey, tema]) => {
         let bloco = temaTemplate;
 
@@ -138,7 +147,7 @@ function generateBannerBlock(banner) {
 
         bloco = bloco.replace(/{tema-nome}/g, temaKey);
         bloco = bloco.replace(/{tema-aba}/g, aba);
-        bloco = bloco.replace(/{tema-bg}/g, color.bgColor || '#fff');
+        bloco = bloco.replace(/{tema-bg}/g, color.bgColor || '#ffffff');
 
         const itensRegex = /<!-- LOOP:itens:start -->([\s\S]*?)<!-- LOOP:itens:end -->/;
         const itemTemplate = bloco.match(itensRegex)?.[1];
@@ -148,16 +157,27 @@ function generateBannerBlock(banner) {
         const itensHtml = renderItens(itemTemplate, tema.items, color, ctas);
 
         return bloco.replace(itensRegex, itensHtml);
-      }).join('');
+      })
+      .join('');
 
     html = html.replace(temaRegex, temasHtml);
 
-    // Nome do arquivo (MANTIDO como você pediu)
+    // =========================
+    // 🔹 OUTPUT
+    // =========================
+
+    const outputDir = 'dist';
+
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir);
+    }
+
     const fileName = `DPSP-NewsPraVoce-${data.vigencia}_v${data.versao}.html`;
+    const filePath = path.join(outputDir, fileName);
 
-    fs.writeFileSync(fileName, html);
+    fs.writeFileSync(filePath, html);
 
-    console.log(`✅ HTML gerado: ${fileName}`);
+    console.log(`✅ HTML gerado: ${filePath}`);
 
   } catch (err) {
     console.error('❌ ERRO NO BUILD:', err);
