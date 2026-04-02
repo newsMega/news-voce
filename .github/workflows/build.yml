@@ -1,0 +1,49 @@
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    paths:
+      - 'data.json'
+      - 'build.js'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Rodar build
+        run: node build.js data.json
+
+      - name: Preparar pasta dist
+        run: |
+          mkdir -p dist
+          mv NewsPraVoce-DPSP-*.html dist/ || (echo "HTML não encontrado" && exit 1)
+
+      - name: Upload artifact (GitHub Pages)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Deploy para GitHub Pages
+        uses: actions/deploy-pages@v4
