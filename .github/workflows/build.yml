@@ -4,35 +4,46 @@ on:
   push:
     paths:
       - 'data.json'
+      - 'build.js'
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
+
     permissions:
-      contents: write
+      pages: write
+      id-token: write
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Run build
+      - name: Rodar build
         run: node build.js data.json
 
-      - name: Find generated HTML
-        id: find
+      - name: Preparar pasta dist
         run: |
-          HTML=$(ls NewsPraVoce-DPSP-*.html 2>/dev/null | head -n 1)
-          if [ -z "$HTML" ]; then
-            echo "HTML não encontrado"
-            exit 1
-          fi
-          echo "file=$HTML" >> $GITHUB_OUTPUT
+          mkdir -p dist
+          mv NewsPraVoce-DPSP-*.html dist/ || (echo "HTML não encontrado" && exit 1)
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload artifact (GitHub Pages)
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: ./
-          keep_files: true
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Deploy para GitHub Pages
+        uses: actions/deploy-pages@v4
