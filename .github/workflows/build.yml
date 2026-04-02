@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
+      contents: read
       pages: write
       id-token: write
 
@@ -21,15 +22,21 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Rodar build
         run: node build.js data.json
 
-      - name: Preparar pasta dist
+      - name: Verificar arquivos gerados
         run: |
-          mkdir -p dist
-          mv NewsPraVoce-DPSP-*.html dist/ || (echo "HTML não encontrado" && exit 1)
+          echo "Arquivos na dist:"
+          ls -la dist
+          FILE=$(ls dist/DPSP-NewsPraVoce-*.html 2>/dev/null | head -n 1)
+          if [ -z "$FILE" ]; then
+            echo "❌ HTML não encontrado na dist"
+            exit 1
+          fi
+          echo "✅ Encontrado: $FILE"
 
       - name: Upload artifact (GitHub Pages)
         uses: actions/upload-pages-artifact@v3
@@ -46,4 +53,5 @@ jobs:
 
     steps:
       - name: Deploy para GitHub Pages
+        id: deploy
         uses: actions/deploy-pages@v4
