@@ -172,7 +172,7 @@ function generateBannerBlock(banner) {
       fs.mkdirSync(outputDir);
     }
 
-    const fileName = `DPSP-NewsPraVoce-${data.vigencia}_v${data.versao}.html`;
+    const fileName = `DPSP-NewsPraVoceT-${data.vigencia}_v${data.versao}.html`;
     const filePath = path.join(outputDir, fileName);
 
     fs.writeFileSync(filePath, html);
